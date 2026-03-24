@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACA AI摄影助手 · 用户旅程地图</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+:root {
+  --black: #1A1A1A;
+  --olive: #3D3D2E;
+  --gold: #C89520;
+  --gold-dark: #A67C1A;
+  --beige: #E8E0D0;
+  --beige-light: #F2ECDF;
+  --cream: #F5F0E6;
+  --sand: #EDE6D6;
+  --text-dark: #2A2518;
+  --text-body: #4A4538;
+  --text-muted: #9E9585;
+  --text-light: #B8B0A0;
+  --footer: #111111;
+  --red: #B84233;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', -apple-system, sans-serif;
+  background: var(--beige);
+  color: var(--text-dark);
+  overflow-x: auto;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { height: 6px; }
+::-webkit-scrollbar-track { background: var(--sand); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+.wrap {
+  min-width: 2100px;
+  padding: 36px 44px 20px;
+  position: relative;
+}
+
+/* Header */
+.hd-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 4px;
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+.hd-bar { width: 40px; height: 4px; background: var(--gold); margin-bottom: 8px; }
+.hd-title {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--black);
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+/* Phase labels row */
+.phases {
+  display: flex;
+  padding-left: 108px;
+  margin-bottom: 2px;
+}
+.ph {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  padding: 3px 0;
+  text-align: center;
+  color: var(--gold);
+}
+
+/* Arrow line */
+.arrow-row {
+  display: flex;
+  padding-left: 108px;
+  margin-bottom: 6px;
+}
+.arrow-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, var(--black), var(--olive) 25%, var(--gold) 55%, var(--gold-dark));
+  position: relative;
+}
+.arrow-line::after {
+  content: '';
+  position: absolute;
+  right: -6px; top: -4px;
+  border: 5px solid transparent;
+  border-left: 7px solid var(--gold-dark);
+}
+
+/* Table */
+.tbl { display: flex; flex-direction: column; gap: 2px; }
+
+.row {
+  display: flex;
+  gap: 0;
+}
+.lbl {
+  width: 108px;
+  min-width: 108px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 6px;
+}
+.lbl-zh { font-size: 13px; font-weight: 700; }
+.lbl-en { font-size: 8px; letter-spacing: 1px; margin-top: 2px; text-transform: uppercase; opacity: 0.5; }
+
+.cls { display: flex; flex: 1; gap: 3px; }
+
+.c {
+  flex: 1;
+  min-width: 115px;
+  padding: 10px 10px;
+  font-size: 11px;
+  line-height: 1.55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Stage row */
+.r-stg .lbl { background: var(--black); }
+.r-stg .lbl .lbl-zh { color: #fff; }
+.r-stg .lbl .lbl-en { color: var(--text-muted); }
+.r-stg .c {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 14px 6px;
+  letter-spacing: 1px;
+  flex-direction: column;
+}
+.sn {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 4px;
+  font-family: Georgia, serif;
+}
+.bg-b { background: var(--black); }
+.bg-o { background: var(--olive); }
+.bg-g { background: var(--gold); }
+.bg-g .sn { color: #fff; }
+
+/* Data rows */
+.r-a .lbl, .r-t .lbl { background: var(--cream); }
+.r-tp .lbl, .r-op .lbl { background: var(--sand); }
+.r-a .lbl .lbl-zh, .r-t .lbl .lbl-zh,
+.r-tp .lbl .lbl-zh, .r-op .lbl .lbl-zh { color: var(--text-dark); }
+
+.r-a .c, .r-t .c { background: var(--cream); color: var(--text-body); }
+.r-tp .c, .r-op .c { background: var(--sand); color: var(--text-body); }
+
+/* Emotion row */
+.r-em .lbl { background: var(--black); }
+.r-em .lbl .lbl-zh { color: #fff; }
+.r-em .lbl .lbl-en { color: var(--text-muted); }
+.r-em .c {
+  background: var(--beige-light);
+  min-height: 80px;
+  flex-direction: column;
+  gap: 2px;
+  position: relative;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-bottom: 2px;
+  position: relative;
+  z-index: 5;
+}
+.em-lbl { font-size: 9px; color: var(--text-muted); font-weight: 400; }
+
+/* Opp row accent */
+.r-op .lbl { background: var(--black); }
+.r-op .lbl .lbl-zh { color: #fff; }
+.r-op .lbl .lbl-en { color: var(--text-muted); }
+.r-op .c {
+  position: relative;
+  background: var(--sand);
+}
+.r-op .c::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 3px; height: 100%;
+  background: var(--gold);
+  opacity: 0.4;
+}
+
+/* Footer */
+.ft {
+  margin-top: 8px;
+  background: var(--footer);
+  padding: 10px 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--gold);
+  font-style: italic;
+  letter-spacing: 2px;
+  font-weight: 500;
+}
+
+/* Curve SVG */
+#cv {
+  position: absolute;
+  pointer-events: none;
+  z-index: 4;
+  top: 0; left: 0;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hd-sub">USER JOURNEY MAP · 用 户 旅 程 地 图</div>
+<div class="hd-bar"></div>
+<div class="hd-title">用户旅程地图</div>
+
+<div class="phases">
+  <div class="ph" style="flex:0 0 calc(100%*3/16)">发 现</div>
+  <div class="ph" style="flex:0 0 calc(100%*3/16)">建 档</div>
+  <div class="ph" style="flex:0 0 calc(100%*5/16)">核 心 使 用</div>
+  <div class="ph" style="flex:0 0 calc(100%*2/16)">故 障</div>
+  <div class="ph" style="flex:0 0 calc(100%*3/16)">成 长</div>
+</div>
+<div class="arrow-row"><div class="arrow-line"></div></div>
+
+<div class="tbl">
+
+  <!-- Stage -->
+  <div class="row r-stg">
+    <div class="lbl"><span class="lbl-zh">阶段</span><span class="lbl-en">Stage</span></div>
+    <div class="cls">
+      <div class="c bg-b"><span class="sn">01</span>发现需求</div>
+      <div class="c bg-b"><span class="sn">02</span>了解产品</div>
+      <div class="c bg-o"><span class="sn">03</span>注册账号</div>
+      <div class="c bg-o"><span class="sn">04</span>设备建档</div>
+      <div class="c bg-o"><span class="sn">05</span>上传解析</div>
+      <div class="c bg-g"><span class="sn">06</span>建档完成</div>
+      <div class="c bg-b"><span class="sn">07</span>AI问答</div>
+      <div class="c bg-b"><span class="sn">08</span>获得答案</div>
+      <div class="c bg-o"><span class="sn">09</span>拍摄辅助</div>
+      <div class="c bg-o"><span class="sn">10</span>获得参数</div>
+      <div class="c bg-g"><span class="sn">11</span>照片优化</div>
+      <div class="c bg-b"><span class="sn">12</span>故障求助</div>
+      <div class="c bg-o"><span class="sn">13</span>问题解决</div>
+      <div class="c bg-o"><span class="sn">14</span>长期使用</div>
+      <div class="c bg-o"><span class="sn">15</span>技能提升</div>
+      <div class="c bg-g"><span class="sn">16</span>付费转化</div>
+    </div>
+  </div>
+
+  <!-- Action -->
+  <div class="row r-a">
+    <div class="lbl"><span class="lbl-zh">行为</span><span class="lbl-en">Doing</span></div>
+    <div class="cls">
+      <div class="c">购买相机<br>搜索摄影教程</div>
+      <div class="c">打开ACA<br>网站或App</div>
+      <div class="c">注册登录</div>
+      <div class="c">搜索并选择<br>相机型号</div>
+      <div class="c">上传说明书<br>系统解析</div>
+      <div class="c">查看<br>设备档案</div>
+      <div class="c">打开AI助手<br>输入问题</div>
+      <div class="c">阅读AI回答<br>理解操作</div>
+      <div class="c">描述拍摄场景<br>请求参数</div>
+      <div class="c">查看推荐参数<br>按参数拍摄</div>
+      <div class="c">上传照片<br>查看优化建议</div>
+      <div class="c">描述设备故障<br>等待AI诊断</div>
+      <div class="c">按步骤排查<br>完成修复</div>
+      <div class="c">持续向<br>AI提问</div>
+      <div class="c">学习更多<br>摄影技巧</div>
+      <div class="c">购买<br>高级功能</div>
+    </div>
+  </div>
+
+  <!-- Touchpoint -->
+  <div class="row r-tp">
+    <div class="lbl"><span class="lbl-zh">接触点</span><span class="lbl-en">Touch Point</span></div>
+    <div class="cls">
+      <div class="c">搜索引擎<br>社区推荐</div>
+      <div class="c">官网首页</div>
+      <div class="c">注册页面</div>
+      <div class="c">型号搜索框<br>我的相机页</div>
+      <div class="c">文件上传<br>文档解析</div>
+      <div class="c">我的相机页</div>
+      <div class="c">AI助手入口<br>AI聊天框</div>
+      <div class="c">AI回答卡片<br>RAG系统</div>
+      <div class="c">聊天输入框<br>参数推荐</div>
+      <div class="c">参数卡片<br>拍摄提示</div>
+      <div class="c">图片上传<br>AI视觉模型</div>
+      <div class="c">AI助手<br>故障知识库</div>
+      <div class="c">步骤卡片<br>反馈按钮</div>
+      <div class="c">AI助手<br>会话记录</div>
+      <div class="c">推荐教程</div>
+      <div class="c">Pro功能<br>订阅页</div>
+    </div>
+  </div>
+
+  <!-- Thinking -->
+  <div class="row r-t">
+    <div class="lbl"><span class="lbl-zh">想法</span><span class="lbl-en">Thinking</span></div>
+    <div class="cls">
+      <div class="c">想快速<br>了解相机</div>
+      <div class="c">好奇AI<br>能否帮助</div>
+      <div class="c">想尝试<br>AI功能</div>
+      <div class="c">希望系统<br>支持该型号</div>
+      <div class="c">希望方便<br>上传查阅</div>
+      <div class="c">设备已被<br>系统记录</div>
+      <div class="c">不理解说明书<br>想快速解决</div>
+      <div class="c">希望回答<br>简单易懂</div>
+      <div class="c">希望得到<br>专业参数</div>
+      <div class="c">希望<br>马上拍摄</div>
+      <div class="c">想改进<br>拍摄技术</div>
+      <div class="c">有些焦虑<br>快速解决</div>
+      <div class="c">希望操作<br>简单有效</div>
+      <div class="c">逐渐<br>信任AI</div>
+      <div class="c">想拍得<br>更好</div>
+      <div class="c">希望获得<br>更多能力</div>
+    </div>
+  </div>
+
+  <!-- Emotion -->
+  <div class="row r-em">
+    <div class="lbl"><span class="lbl-zh">情绪曲线</span><span class="lbl-en">Feeling</span></div>
+    <div class="cls" id="emo">
+      <div class="c"><div class="dot" style="background:#9E9585"></div><span class="em-lbl">平静</span></div>
+      <div class="c"><div class="dot" style="background:#9E9585"></div><span class="em-lbl">好奇</span></div>
+      <div class="c"><div class="dot" style="background:var(--gold)"></div><span class="em-lbl">期待</span></div>
+      <div class="c"><div class="dot" style="background:var(--gold)"></div><span class="em-lbl">期待</span></div>
+      <div class="c"><div class="dot" style="background:#9E9585"></div><span class="em-lbl">耐心</span></div>
+      <div class="c"><div class="dot" style="background:var(--gold)"></div><span class="em-lbl">满意</span></div>
+      <div class="c"><div class="dot" style="background:#9E9585"></div><span class="em-lbl">困惑</span></div>
+      <div class="c"><div class="dot" style="background:var(--gold)"></div><span class="em-lbl">满意</span></div>
+      <div class="c"><div class="dot" style="background:var(--gold)"></div><span class="em-lbl">期待</span></div>
+      <div class="c"><div class="dot" style="background:var(--gold)"></div><span class="em-lbl">兴奋</span></div>
+      <div class="c"><div class="dot" style="background:var(--gold)"></div><span class="em-lbl">进步</span></div>
+      <div class="c"><div class="dot" style="background:var(--red)"></div><span class="em-lbl">焦虑</span></div>
+      <div class="c"><div class="dot" style="background:var(--gold)"></div><span class="em-lbl">安心</span></div>
+      <div class="c"><div class="dot" style="background:var(--gold)"></div><span class="em-lbl">信任</span></div>
+      <div class="c"><div class="dot" style="background:var(--gold)"></div><span class="em-lbl">成就</span></div>
+      <div class="c"><div class="dot" style="background:var(--gold)"></div><span class="em-lbl">忠诚</span></div>
+    </div>
+  </div>
+
+  <!-- Opportunity -->
+  <div class="row r-op">
+    <div class="lbl"><span class="lbl-zh">产品机会</span><span class="lbl-en">Opportunity</span></div>
+    <div class="cls">
+      <div class="c">SEO内容入口<br>社区种草</div>
+      <div class="c">展示AI<br>摄影助手能力</div>
+      <div class="c">降低<br>注册门槛</div>
+      <div class="c">自动识别型号<br>型号数据库</div>
+      <div class="c">自动识别<br>文档结构化</div>
+      <div class="c">提供<br>推荐问答</div>
+      <div class="c">推荐常见问题<br>问题建议</div>
+      <div class="c">图文解释<br>引用说明书</div>
+      <div class="c">自动识别场景<br>场景推荐</div>
+      <div class="c">一键保存<br>拍摄教程</div>
+      <div class="c">构图分析<br>参数建议</div>
+      <div class="c">故障模板<br>故障诊断</div>
+      <div class="c">图文排查<br>收集反馈</div>
+      <div class="c">会话记录<br>个性推荐</div>
+      <div class="c">摄影课程<br>进阶教程</div>
+      <div class="c">AI Pro订阅<br>高级功能</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Curve SVG -->
+<svg id="cv" width="0" height="0">
+  <defs>
+    <linearGradient id="cg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#9E9585"/>
+      <stop offset="30%" stop-color="#C89520"/>
+      <stop offset="68%" stop-color="#C89520"/>
+      <stop offset="72%" stop-color="#B84233"/>
+      <stop offset="80%" stop-color="#C89520"/>
+      <stop offset="100%" stop-color="#C89520"/>
+    </linearGradient>
+  </defs>
+  <path id="cp" fill="none" stroke="url(#cg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+<div class="ft">越用越离不开，越用越愿意付费</div>
+
+</div>
+
+<script>
+function draw() {
+  var dots = document.querySelectorAll('#emo .dot');
+  var svg = document.getElementById('cv');
+  var path = document.getElementById('cp');
+  var wrap = document.querySelector('.wrap');
+  if (!dots.length) return;
+  
+  // Emotion height levels (higher = happier, in the cell)
+  var levels = [0.4, 0.5, 0.65, 0.65, 0.45, 0.8, 0.35, 0.75, 0.7, 0.85, 0.75, 0.15, 0.7, 0.8, 0.85, 0.9];
+  
+  var wr = wrap.getBoundingClientRect();
+  var pts = [];
+  
+  for (var i = 0; i < dots.length; i++) {
+    var dr = dots[i].getBoundingClientRect();
+    pts.push({
+      x: dr.left + dr.width/2 - wr.left,
+      y: dr.top + dr.height/2 - wr.top
+    });
+  }
+  
+  svg.style.width = wr.width + 'px';
+  svg.style.height = wr.height + 'px';
+  svg.setAttribute('width', wr.width);
+  svg.setAttribute('height', wr.height);
+  svg.setAttribute('viewBox', '0 0 ' + wr.width + ' ' + wr.height);
+  
+  // Catmull-Rom to Bezier
+  var d = 'M' + pts[0].x + ',' + pts[0].y;
+  for (var i = 0; i < pts.length - 1; i++) {
+    var p0 = pts[Math.max(0, i-1)];
+    var p1 = pts[i];
+    var p2 = pts[i+1];
+    var p3 = pts[Math.min(pts.length-1, i+2)];
+    var c1x = p1.x + (p2.x - p0.x) / 6;
+    var c1y = p1.y + (p2.y - p0.y) / 6;
+    var c2x = p2.x - (p3.x - p1.x) / 6;
+    var c2y = p2.y - (p3.y - p1.y) / 6;
+    d += ' C'+c1x+','+c1y+' '+c2x+','+c2y+' '+p2.x+','+p2.y;
+  }
+  path.setAttribute('d', d);
+}
+
+window.addEventListener('load', function(){ setTimeout(draw, 150); });
+window.addEventListener('resize', draw);
+window.addEventListener('scroll', draw);
+</script>
+</body>
+</html>
